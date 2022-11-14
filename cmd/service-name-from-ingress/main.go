@@ -19,16 +19,24 @@ import (
 )
 
 var (
-	ingressLabels, ingressNamespace, ingressName string
+	ingressLabels, ingressNamespace, ingressName, logLevel string
 )
 
 func main() {
 	flag.StringVar(&ingressLabels, "ingress.labels", "", "Watch for ingress with this label")
 	flag.StringVar(&ingressNamespace, "ingress.namespace", "", "Watch for ingress in this namespace")
 	flag.StringVar(&ingressName, "ingress.name", "", "Watch for ingress with this name")
+	flag.StringVar(&logLevel, "log.level", "info", "log level (debug|info|warning|error)")
 	flag.Parse()
 
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	level, err := zerolog.ParseLevel(logLevel)
+	if err != nil {
+		log.Fatal().Err(err).Send()
+
+	}
+	zerolog.SetGlobalLevel(level)
+
 	runtime.ErrorHandlers = []func(error){
 		func(err error) { log.Warn().Err(err).Msg("[k8s]") },
 	}
