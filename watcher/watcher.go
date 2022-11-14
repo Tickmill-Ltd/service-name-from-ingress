@@ -48,6 +48,22 @@ func (w *Watcher) Run(ctx context.Context) error {
 	serviceLister := factory.Core().V1().Services().Lister()
 	ingressLister := factory.Networking().V1().Ingresses().Lister()
 
+	/*
+		listServices := func(ingress *networking.Ingress) {
+			svc, err := serviceLister.Services(ingress.Namespace).List(labels.Everything())
+			if err != nil {
+				log.Error().Err(err).
+					Str("namespace", ingress.Namespace).
+					Msg("WTF")
+			}
+			for _, service := range svc {
+				log.Debug().
+					Str("namespace", ingress.Namespace).
+					Str("service", service.Name).
+					Msg("Found")
+			}
+		}
+	*/
 	addBackend := func(ingressPayload *IngressPayload, backend networking.IngressBackend) {
 		svc, err := serviceLister.Services(ingressPayload.Ingress.Namespace).Get(backend.Service.Name)
 		if err != nil {
@@ -69,13 +85,19 @@ func (w *Watcher) Run(ctx context.Context) error {
 			TLSCertificates: make(map[string]*tls.Certificate),
 		}
 
-		ingresses, err := ingressLister.List(labels.Everything())
+		l, err := labels.Parse("AWSIngressHelper in (myhelper)")
+		if err != nil {
+			l = labels.Nothing()
+		}
+		ingresses, err := ingressLister.List(l)
+		//ingresses, err := ingressLister.List(labels.Everything())
 		if err != nil {
 			log.Error().Err(err).Msg("failed to list ingresses")
 			return
 		}
 
 		for _, ingress := range ingresses {
+			//listServices(ingress)
 			ingressPayload := IngressPayload{
 				Ingress:      ingress,
 				ServicePorts: make(map[string]map[string]int),
@@ -138,14 +160,15 @@ func (w *Watcher) Run(ctx context.Context) error {
 	}
 
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		informer := factory.Core().V1().Secrets().Informer()
-		informer.AddEventHandler(handler)
-		informer.Run(ctx.Done())
-		wg.Done()
-	}()
-
+	/*
+		wg.Add(1)
+		go func() {
+			informer := factory.Core().V1().Secrets().Informer()
+			informer.AddEventHandler(handler)
+			informer.Run(ctx.Done())
+			wg.Done()
+		}()
+	*/
 	wg.Add(1)
 	go func() {
 		informer := factory.Networking().V1().Ingresses().Informer()
@@ -156,6 +179,7 @@ func (w *Watcher) Run(ctx context.Context) error {
 
 	wg.Add(1)
 	go func() {
+		// required as without it servicesLister returns empty list
 		informer := factory.Core().V1().Services().Informer()
 		informer.AddEventHandler(handler)
 		informer.Run(ctx.Done())
