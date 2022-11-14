@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/calebdoxsey/kubernetes-simple-ingress-controller/watcher"
+	"github.com/Tickmill-Ltd/service-name-from-ingress/watcher"
 	"github.com/stretchr/testify/assert"
 	networking "k8s.io/api/networking/v1"
 )

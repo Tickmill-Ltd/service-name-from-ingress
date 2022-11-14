@@ -1,4 +1,4 @@
-module github.com/calebdoxsey/kubernetes-simple-ingress-controller
+module github.com/Tickmill-Ltd/service-name-from-ingress
 
 go 1.13
 

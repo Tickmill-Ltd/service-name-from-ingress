@@ -12,7 +12,7 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/calebdoxsey/kubernetes-simple-ingress-controller/watcher"
+	"github.com/Tickmill-Ltd/service-name-from-ingress/watcher"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/http2"
 	"golang.org/x/sync/errgroup"
