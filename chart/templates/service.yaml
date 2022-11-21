@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "service-name-from-ingress.fullname" . }}
+  annotations:
+    tickmill.com/nginx.frontrunner: {{ .Values.alb.ingressName | default (include "service-name-from-ingress.fullname" . ) }}
+  labels:
+    {{- include "service-name-from-ingress.labels" . | nindent 4 }}
+
+spec:
+  externalName: {{ .Values.alb.externalName | default "example.local" }}
+  sessionAffinity: None
+  type: ExternalName

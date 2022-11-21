@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  {{- with .Values.alb.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+  
+  name: {{ .Values.alb.ingressName | default (include "service-name-from-ingress.fullname" . ) }}
+  
+spec:
+  defaultBackend:
+    service:
+      name: {{ .Values.nginx.serviceName | default "ingress-nginx-controller" }}
+      {{- with .Values.nginx.port }}
+      port:
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+  ingressClassName: {{ .Values.alb.ingressClassName | default "alb" }}
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: {{ .Values.nginx.serviceName | default "ingress-nginx-controller" }}
+            {{- with .Values.nginx.port }}
+            port:
+            {{- toYaml . | nindent 14 }}
+            {{- end }}
+        path: /
+        pathType: Prefix

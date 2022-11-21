@@ -1,0 +1,78 @@
+# Default values for service-name-from-ingress.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+alb:
+  # if not set, calculated
+  ingressName: ""   
+  # ingressClass for ingress
+  ingressClassName: alb 
+  # starting name of Service
+  externalName: example.local
+  # Annotations for ingress
+  annotations:
+    # alb.ingress.kubernetes.io/certificate-arn: arn-of-certificate, arn-of-certificate2, ..    
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80,"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/success-codes: 200,404
+    # Compatible with amazon-vpc-cni-k8s only
+    # alb.ingress.kubernetes.io/target-type: ip
+
+nginx:
+  # Name of ingress
+  serviceName: ingress-nginx-controller
+  port:
+    name: http
+  
+image:
+  repository: tmill/service-name-from-ingress
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

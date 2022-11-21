@@ -1,0 +1,4 @@
+Created ALB ingress {{ .Values.alb.ingressName | default (include "service-name-from-ingress.fullname" . ) }} and service
+{{ include "service-name-from-ingress.fullname" . }}.
+
+Deployed controller should mirror service ExternalName value from ALB ingress
