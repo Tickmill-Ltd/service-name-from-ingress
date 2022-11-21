@@ -42,9 +42,17 @@ func New(client kubernetes.Interface, context context.Context, labels labels.Sel
 
 // Run runs the watcher.
 func (w *Watcher) Run(ctx context.Context) error {
-	factory := informers.NewSharedInformerFactory(w.client, time.Minute)
+	// informers.NewSharedInformerFactoryWithOptions()
+	var factory informers.SharedInformerFactory
+	if w.namespace != "" {
+		factory = informers.NewSharedInformerFactoryWithOptions(w.client, time.Minute, informers.WithNamespace(w.namespace))
+	} else {
+		factory = informers.NewSharedInformerFactory(w.client, time.Minute)
+	}
+	//factory := informers.NewSharedInformerFactory(w.client, time.Minute)
 
 	serviceLister := factory.Core().V1().Services().Lister()
+
 	ingressLister := factory.Networking().V1().Ingresses().Lister()
 
 	onChange := func() {

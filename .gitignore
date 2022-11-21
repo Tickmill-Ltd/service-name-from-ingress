@@ -1,3 +1,5 @@
 .idea/
 .tfenv/
 .ssh/
+*.log
+deploy.sh
