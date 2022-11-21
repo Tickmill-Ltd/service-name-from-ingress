@@ -28,7 +28,7 @@ image:
   repository: tmill/service-name-from-ingress
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "latest"
+  tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
