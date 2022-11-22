@@ -2,12 +2,16 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 alb:
+  # if false, annotation is not enabled
+  enabled: true
   # if not set, calculated
   ingressName: ""   
   # ingressClass for ingress
   ingressClassName: alb 
   # starting name of Service
   externalName: example.local
+  # frontrunner service name
+  serviceName: ''
   # Annotations for ingress
   annotations:
     # alb.ingress.kubernetes.io/certificate-arn: arn-of-certificate, arn-of-certificate2, ..    
@@ -16,8 +20,7 @@ alb:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/success-codes: 200,404
     # Compatible with amazon-vpc-cni-k8s only
-    # alb.ingress.kubernetes.io/target-type: ip
-
+    # alb.ingress.kubernetes.io/target-type: ip  
 nginx:
   # Name of ingress
   serviceName: ingress-nginx-controller

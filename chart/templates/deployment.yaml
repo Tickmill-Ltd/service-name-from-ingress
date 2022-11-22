@@ -5,7 +5,7 @@ metadata:
   labels:
     {{- include "service-name-from-ingress.labels" . | nindent 4 }}
 spec:  
-  replicas: 1  
+  replicas: {{ ternary 1 0 .Values.alb.enabled }}
   selector:
     matchLabels:
       {{- include "service-name-from-ingress.selectorLabels" . | nindent 6 }}

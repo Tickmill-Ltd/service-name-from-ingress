@@ -1,9 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "service-name-from-ingress.fullname" . }}
+  name: {{ .Values.alb.serviceName | default ( include "service-name-from-ingress.fullname" . ) }}
+  {{- if .Values.alb.enabled }}
   annotations:
     tickmill.com/nginx.frontrunner: {{ .Values.alb.ingressName | default (include "service-name-from-ingress.fullname" . ) }}
+  {{- end }}
   labels:
     {{- include "service-name-from-ingress.labels" . | nindent 4 }}
 
