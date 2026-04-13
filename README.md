@@ -1,4 +1,4 @@
-# Security Proof-of-Concept — Repo Jacking
+# Security Proof-of-Concept — Repo Jacking [By -  init2wi nit]
 
 This repository was defensively claimed during an authorized Bugcrowd bug bounty engagement for Tickmill.
 
